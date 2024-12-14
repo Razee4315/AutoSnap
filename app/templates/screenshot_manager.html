@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Screenshot Manager</h1>
+        <div class="btn-group">
+            <button class="btn btn-outline-danger" id="deleteSelected">Delete Selected</button>
+            <button class="btn btn-outline-primary" id="downloadSelected">Download Selected</button>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search screenshots..." id="searchInput">
+                        <button class="btn btn-outline-secondary" type="button">Search</button>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select" id="sortBy">
+                        <option value="date-desc">Date (Newest First)</option>
+                        <option value="date-asc">Date (Oldest First)</option>
+                        <option value="name-asc">Name (A-Z)</option>
+                        <option value="name-desc">Name (Z-A)</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select" id="filterBy">
+                        <option value="all">All Screenshots</option>
+                        <option value="today">Today</option>
+                        <option value="week">This Week</option>
+                        <option value="month">This Month</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4" id="screenshotGrid">
+        <!-- Screenshot items will be dynamically added here -->
+        <div class="col">
+            <div class="card h-100">
+                <img src="{{ url_for('static', filename='images/placeholder.jpg') }}" class="card-img-top" alt="Screenshot">
+                <div class="card-body">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="">
+                        <h5 class="card-title">Screenshot_001</h5>
+                    </div>
+                    <p class="card-text">
+                        <small class="text-muted">Captured: Dec 13, 2024 10:30 AM</small>
+                    </p>
+                </div>
+                <div class="card-footer">
+                    <div class="btn-group btn-group-sm w-100">
+                        <button class="btn btn-outline-primary">View</button>
+                        <button class="btn btn-outline-secondary">Download</button>
+                        <button class="btn btn-outline-danger">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <nav aria-label="Screenshot navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1">Previous</a>
+            </li>
+            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#">Next</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+{% endblock %}

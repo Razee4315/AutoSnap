@@ -1,0 +1,321 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Upload Section - Moved to Top -->
+<section class="hero-upload-section py-5 bg-gradient">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 text-center text-lg-start mb-4 mb-lg-0">
+                <h1 class="display-4 fw-bold text-dark mb-4">Transform Your Lectures Into Smart Notes</h1>
+                <p class="lead text-secondary mb-0">Upload your lecture video or paste a YouTube URL to get started</p>
+            </div>
+            <div class="col-lg-6">
+                <div class="upload-card modern-card bg-white p-4">
+                    <h2 class="h3 text-center mb-4">Start Recording</h2>
+                    
+                    <!-- File Upload Area -->
+                    <div class="upload-area mb-4">
+                        <div class="drop-zone" id="dropZone">
+                            <div class="upload-icon mb-3">
+                                <i class="fas fa-cloud-upload-alt fa-3x text-primary"></i>
+                            </div>
+                            <h3 class="h5 mb-2">Upload Video</h3>
+                            <p class="text-muted mb-3">Drag and drop your video file here</p>
+                            <button class="btn-modern btn-modern-outline-primary">
+                                <i class="fas fa-file-video"></i> Choose File
+                            </button>
+                            <input type="file" id="fileInput" class="d-none" accept="video/*">
+                        </div>
+                    </div>
+
+                    <!-- Divider -->
+                    <div class="divider-text mb-4">
+                        <span class="bg-white px-3 text-muted">OR</span>
+                    </div>
+
+                    <!-- YouTube URL Input -->
+                    <div class="youtube-area p-4 bg-light rounded-lg">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="youtube-icon-wrapper me-3">
+                                <i class="fab fa-youtube"></i>
+                            </div>
+                            <h3 class="h5 mb-0">YouTube Video</h3>
+                        </div>
+                        <p class="text-muted small mb-3">Enter the URL of any YouTube lecture video to process</p>
+                        <div class="input-group input-group-lg youtube-input-group">
+                            <span class="input-group-text bg-white border-end-0">
+                                <i class="fas fa-link text-primary"></i>
+                            </span>
+                            <input type="text" 
+                                   class="form-control-modern form-control-lg border-start-0" 
+                                   id="youtubeUrl"
+                                   placeholder="https://www.youtube.com/watch?v=..."
+                                   autocomplete="off"
+                                   spellcheck="false">
+                        </div>
+                        <div class="d-grid mt-3">
+                            <button class="btn-modern btn-modern-gradient btn-lg" id="processYoutube">
+                                <i class="fab fa-youtube me-2"></i>
+                                Process Video
+                                <i class="fas fa-arrow-right ms-2"></i>
+                            </button>
+                        </div>
+                        <div class="supported-info mt-3">
+                            <span class="badge bg-gradient-success">
+                                <i class="fas fa-check-circle me-1"></i> Supports all YouTube videos
+                            </span>
+                            <span class="badge bg-gradient-info">
+                                <i class="fas fa-clock me-1"></i> Any duration
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="py-5" id="how-it-works">
+    <div class="container">
+        <h2 class="text-center mb-5">How It Works</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="feature-card text-center">
+                    <div class="feature-icon mb-4">
+                        <i class="fas fa-upload"></i>
+                    </div>
+                    <h3 class="h5">1. Upload Video</h3>
+                    <p class="text-muted">Upload your lecture recording or paste a YouTube URL</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card text-center">
+                    <div class="feature-icon mb-4">
+                        <i class="fas fa-magic"></i>
+                    </div>
+                    <h3 class="h5">2. AI Processing</h3>
+                    <p class="text-muted">Our AI detects and extracts important content</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card text-center">
+                    <div class="feature-icon mb-4">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <h3 class="h5">3. Get Notes</h3>
+                    <p class="text-muted">Download your organized lecture notes</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-5">Why Students Love AutoSnap</h2>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="benefit-card text-center">
+                    <i class="fas fa-clock text-primary mb-3"></i>
+                    <h4 class="h5">Save Time</h4>
+                    <p class="text-muted mb-0">Focus on understanding instead of taking notes</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="benefit-card text-center">
+                    <i class="fas fa-brain text-primary mb-3"></i>
+                    <h4 class="h5">Better Learning</h4>
+                    <p class="text-muted mb-0">Organized notes for better comprehension</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="benefit-card text-center">
+                    <i class="fas fa-mobile-alt text-primary mb-3"></i>
+                    <h4 class="h5">Access Anywhere</h4>
+                    <p class="text-muted mb-0">Study on any device, anytime</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="benefit-card text-center">
+                    <i class="fas fa-share-alt text-primary mb-3"></i>
+                    <h4 class="h5">Easy Sharing</h4>
+                    <p class="text-muted mb-0">Share notes with your study group</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .bg-gradient {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    }
+
+    .text-white-75 {
+        color: rgba(255, 255, 255, 0.75);
+    }
+
+    .upload-card {
+        border: none;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .drop-zone {
+        border: 2px dashed var(--primary-color);
+        border-radius: var(--radius-lg);
+        padding: 2rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: rgba(var(--primary-rgb), 0.02);
+    }
+
+    .drop-zone:hover {
+        background: rgba(var(--primary-rgb), 0.05);
+        transform: translateY(-2px);
+    }
+
+    .upload-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: rgba(var(--primary-rgb), 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+    }
+
+    .divider-text {
+        position: relative;
+        text-align: center;
+    }
+
+    .divider-text::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: #e2e8f0;
+        z-index: 0;
+    }
+
+    .divider-text span {
+        position: relative;
+        z-index: 1;
+    }
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        
+        // Handle drag and drop
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('drag-active');
+        });
+        
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('drag-active');
+        });
+        
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('drag-active');
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('video/')) {
+                handleFileUpload(file);
+            } else {
+                showAlert('Please upload a video file', 'error');
+            }
+        });
+        
+        // Handle click to upload
+        dropZone.addEventListener('click', () => {
+            fileInput.click();
+        });
+        
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                handleFileUpload(file);
+            }
+        });
+        
+        function handleFileUpload(file) {
+            const formData = new FormData();
+            formData.append('video', file);
+            
+            // Show loading state
+            showLoading('Uploading your video...', 'This might take a few moments');
+            
+            fetch('/api/upload-video', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                hideLoading();
+                if (data.success) {
+                    showSuccess('Upload successful!', 'Redirecting to processing...');
+                    setTimeout(() => {
+                        window.location.href = '/processing';
+                    }, 1500);
+                } else {
+                    showAlert(data.error || 'Upload failed', 'error');
+                }
+            })
+            .catch(error => {
+                hideLoading();
+                showAlert('Upload failed. Please try again.', 'error');
+            });
+        }
+        
+        // Handle YouTube URL processing
+        document.getElementById('processYoutube').addEventListener('click', () => {
+            const url = document.getElementById('youtubeUrl').value.trim();
+            if (!url) {
+                showAlert('Please enter a YouTube URL', 'error');
+                return;
+            }
+            
+            // Show loading state
+            showLoading('Processing YouTube video...', 'This might take a few moments');
+            
+            fetch('/api/process-youtube', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ url })
+            })
+            .then(response => response.json())
+            .then(data => {
+                hideLoading();
+                if (data.success) {
+                    showSuccess('Processing started!', 'Redirecting...');
+                    setTimeout(() => {
+                        window.location.href = '/processing';
+                    }, 1500);
+                } else {
+                    showAlert(data.error || 'Processing failed', 'error');
+                }
+            })
+            .catch(error => {
+                hideLoading();
+                showAlert('Processing failed. Please try again.', 'error');
+            });
+        });
+    });
+</script>
+{% endblock %}

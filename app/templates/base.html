@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}AutoSnap{% endblock %}</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+    {% block extra_css %}{% endblock %}
+
+    <style>
+        #background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- 3D Background -->
+    <canvas id="background"></canvas>
+
+    <!-- Content Wrapper -->
+    <div class="content-wrapper">
+        <!-- Professional Navigation -->
+        <nav class="header">
+            <div class="header-container">
+                <div class="header-brand">
+                    <a href="{{ url_for('home') }}" class="logo-link">
+                        <span class="logo-icon">
+                            <i class="fas fa-folder"></i>
+                        </span>
+                        <span class="logo-text">AutoSnap</span>
+                    </a>
+                </div>
+                
+                <div class="nav-group">
+                    <a href="{{ url_for('home') }}" class="nav-link {% if request.endpoint == 'home' %}active{% endif %}">
+                        <i class="fas fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    <a href="{{ url_for('view_notes') }}" class="nav-link {% if request.endpoint == 'view_notes' %}active{% endif %}">
+                        <i class="fas fa-book"></i>
+                        <span>Notes</span>
+                    </a>
+                    <button class="nav-link feedback-btn" data-bs-toggle="modal" data-bs-target="#feedbackModal">
+                        <i class="fas fa-comment-dots"></i>
+                        <span>Feedback</span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="container py-4">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert-modern alert-modern-{{ category }} mb-4">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            {% block content %}{% endblock %}
+        </main>
+
+        <!-- Feedback Modal -->
+        <div class="modal fade" id="feedbackModal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header border-0">
+                        <div class="modal-title-wrapper">
+                            <h5 class="modal-title">Send Feedback</h5>
+                            <p class="modal-subtitle">Help us improve AutoSnap</p>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="feedbackForm">
+                            <div class="mb-4">
+                                <label class="form-label">Feedback Type</label>
+                                <div class="feedback-type-grid">
+                                    <div class="feedback-type-option">
+                                        <input type="radio" name="feedbackType" id="typeSuggestion" value="suggestion" checked>
+                                        <label for="typeSuggestion">
+                                            <i class="fas fa-lightbulb"></i>
+                                            <span>Suggestion</span>
+                                        </label>
+                                    </div>
+                                    <div class="feedback-type-option">
+                                        <input type="radio" name="feedbackType" id="typeBug" value="bug">
+                                        <label for="typeBug">
+                                            <i class="fas fa-bug"></i>
+                                            <span>Bug Report</span>
+                                        </label>
+                                    </div>
+                                    <div class="feedback-type-option">
+                                        <input type="radio" name="feedbackType" id="typeOther" value="other">
+                                        <label for="typeOther">
+                                            <i class="fas fa-comment-dots"></i>
+                                            <span>Other</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label">Priority Level</label>
+                                <select class="form-select" name="priority">
+                                    <option value="low">Low</option>
+                                    <option value="medium" selected>Medium</option>
+                                    <option value="high">High</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label">Message</label>
+                                <textarea class="form-control" name="message" rows="4" placeholder="Tell us what's on your mind..."></textarea>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label">Attachments</label>
+                                <div class="file-drop-area">
+                                    <input type="file" id="fileInput" multiple>
+                                    <div class="file-message">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                        <span>Drop files here or click to upload</span>
+                                    </div>
+                                    <div id="filePreview" class="file-preview"></div>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="notifyCheck" name="notify">
+                                    <label class="form-check-label" for="notifyCheck">
+                                        Notify me about updates
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer border-0 p-0">
+                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Send Feedback</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast Notification -->
+        <div class="toast-container position-fixed bottom-0 end-0 p-3">
+            <div id="feedbackToast" class="toast" role="alert">
+                <div class="toast-header">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong class="me-auto">Notification</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+                </div>
+                <div class="toast-body"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="{{ url_for('static', filename='js/background.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Feedback Form Handling
+        document.addEventListener('DOMContentLoaded', function() {
+            const feedbackForm = document.getElementById('feedbackForm');
+            const fileInput = document.getElementById('fileInput');
+            const filePreview = document.getElementById('filePreview');
+            const dropArea = document.querySelector('.file-drop-area');
+
+            // Drag and drop handling
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, preventDefaults, false);
+            });
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropArea.addEventListener(eventName, highlight, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, unhighlight, false);
+            });
+
+            function highlight(e) {
+                dropArea.classList.add('highlight');
+            }
+
+            function unhighlight(e) {
+                dropArea.classList.remove('highlight');
+            }
+
+            dropArea.addEventListener('drop', handleDrop, false);
+
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                handleFiles(files);
+            }
+
+            fileInput.addEventListener('change', function() {
+                handleFiles(this.files);
+            });
+
+            function handleFiles(files) {
+                updateFilePreview(files);
+            }
+
+            function updateFilePreview(files) {
+                filePreview.innerHTML = '';
+                if (files) {
+                    [...files].forEach(file => {
+                        const fileItem = document.createElement('div');
+                        fileItem.className = 'file-item';
+                        fileItem.innerHTML = `
+                            <i class="fas fa-file"></i>
+                            <span>${file.name}</span>
+                        `;
+                        filePreview.appendChild(fileItem);
+                    });
+                }
+            }
+
+            // Form submission
+            feedbackForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const submitBtn = document.querySelector('button[type="submit"]');
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+
+                // Simulate form submission
+                setTimeout(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = 'Send Feedback';
+                    
+                    // Close modal and show success message
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('feedbackModal'));
+                    modal.hide();
+                    showToast('success', 'Thank you for your feedback!');
+                    
+                    // Reset form
+                    feedbackForm.reset();
+                    filePreview.innerHTML = '';
+                }, 1500);
+            });
+
+            // Toast notification
+            function showToast(type, message) {
+                const toast = document.getElementById('feedbackToast');
+                const toastBody = toast.querySelector('.toast-body');
+                const icon = toast.querySelector('.toast-header i');
+                
+                // Set toast type
+                icon.className = type === 'success' 
+                    ? 'fas fa-check-circle me-2 text-success'
+                    : 'fas fa-exclamation-circle me-2 text-danger';
+                
+                // Set message
+                toastBody.textContent = message;
+                
+                // Show toast
+                const bsToast = new bootstrap.Toast(toast);
+                bsToast.show();
+            }
+        });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

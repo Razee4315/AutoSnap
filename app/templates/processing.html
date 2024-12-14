@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+
+{% block title %}Processing Video - AutoSnap{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="modern-card text-center">
+                <div class="processing-status mb-5">
+                    <div class="spinner-modern mx-auto mb-4"></div>
+                    <h2 class="fw-bold mb-3">Processing Your Video</h2>
+                    <p class="text-secondary mb-4">We're analyzing your video and extracting important content. This may take a few minutes.</p>
+                    
+                    <div class="progress-modern mb-4">
+                        <div class="progress-bar" role="progressbar" style="width: 0%" id="progressBar"></div>
+                    </div>
+                    
+                    <div class="processing-steps">
+                        <div class="step-item animate-on-scroll" data-step="1">
+                            <i class="fas fa-file-video fa-2x text-primary mb-3"></i>
+                            <h4 class="h5 fw-bold">Video Analysis</h4>
+                            <p class="text-secondary small">Analyzing video frames</p>
+                        </div>
+                        
+                        <div class="step-item animate-on-scroll" data-step="2">
+                            <i class="fas fa-magic fa-2x text-primary mb-3"></i>
+                            <h4 class="h5 fw-bold">Content Detection</h4>
+                            <p class="text-secondary small">Detecting important content</p>
+                        </div>
+                        
+                        <div class="step-item animate-on-scroll" data-step="3">
+                            <i class="fas fa-images fa-2x text-primary mb-3"></i>
+                            <h4 class="h5 fw-bold">Screenshot Capture</h4>
+                            <p class="text-secondary small">Capturing key moments</p>
+                        </div>
+                        
+                        <div class="step-item animate-on-scroll" data-step="4">
+                            <i class="fas fa-file-pdf fa-2x text-primary mb-3"></i>
+                            <h4 class="h5 fw-bold">PDF Generation</h4>
+                            <p class="text-secondary small">Creating organized notes</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="processing-complete d-none">
+                    <i class="fas fa-check-circle fa-5x text-success mb-4"></i>
+                    <h2 class="fw-bold mb-3">Processing Complete!</h2>
+                    <p class="text-secondary mb-4">Your video has been successfully processed and notes have been generated.</p>
+                    <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
+                        <a href="{{ url_for('view_notes') }}" class="btn-modern btn-modern-primary">
+                            <i class="fas fa-book"></i> View Notes
+                        </a>
+                        <a href="{{ url_for('home') }}" class="btn-modern btn-modern-secondary">
+                            <i class="fas fa-home"></i> Back to Home
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .processing-steps {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+        margin-top: 3rem;
+    }
+
+    .step-item {
+        padding: 1.5rem;
+        border-radius: var(--radius-lg);
+        background: rgba(99, 102, 241, 0.05);
+        transition: all 0.3s ease;
+    }
+
+    .step-item:hover {
+        transform: translateY(-5px);
+        background: rgba(99, 102, 241, 0.1);
+    }
+
+    .step-item[data-status="complete"] {
+        background: rgba(34, 197, 94, 0.05);
+    }
+
+    .step-item[data-status="complete"] i {
+        color: var(--success-color);
+    }
+
+    .step-item[data-status="active"] {
+        background: rgba(99, 102, 241, 0.1);
+        box-shadow: 0 0 0 2px var(--primary-color);
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+
+    .step-item[data-status="active"] i {
+        animation: pulse 1.5s infinite;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const progressBar = document.getElementById('progressBar');
+        const steps = document.querySelectorAll('.step-item');
+        let currentStep = 0;
+        
+        function updateProgress() {
+            const progress = (currentStep / 4) * 100;
+            progressBar.style.width = `${progress}%`;
+            
+            steps.forEach((step, index) => {
+                if (index < currentStep) {
+                    step.setAttribute('data-status', 'complete');
+                } else if (index === currentStep) {
+                    step.setAttribute('data-status', 'active');
+                } else {
+                    step.removeAttribute('data-status');
+                }
+            });
+            
+            if (currentStep >= 4) {
+                document.querySelector('.processing-status').classList.add('d-none');
+                document.querySelector('.processing-complete').classList.remove('d-none');
+            }
+        }
+        
+        // Simulate processing steps
+        function simulateProcessing() {
+            if (currentStep < 4) {
+                setTimeout(() => {
+                    currentStep++;
+                    updateProgress();
+                    simulateProcessing();
+                }, 3000); // Each step takes 3 seconds
+            }
+        }
+        
+        simulateProcessing();
+    });
+</script>
+{% endblock %}
